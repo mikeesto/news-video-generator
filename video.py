@@ -46,10 +46,11 @@ def create_subtitle_clips(subtitles, video_size):
             font_size=48,
             color="white",
             stroke_color="black",
-            stroke_width=2,
+            stroke_width=3,
             size=video_size,
             method="caption",
-            # align="center", work out how to align bottom
+            vertical_align="bottom",
+            margin=(0, -30, 0, 0),
         )
 
     # Format subtitles into the required structure
