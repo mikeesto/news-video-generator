@@ -44,7 +44,9 @@ def parse_lyrics_file(lyrics_file):
                 # For the last subtitle, show it for 4 seconds
                 end_time = start_time + 4
 
-            subtitles.append((start_time, end_time, text.strip()))
+            subtitles.append(
+                (start_time, end_time, text.strip(".,"))
+            )  # Remove trailing punctuation
 
     return subtitles
 
