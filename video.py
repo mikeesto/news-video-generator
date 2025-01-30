@@ -9,31 +9,42 @@ def parse_lyrics_file(lyrics_file):
     subtitles = []
 
     with open(lyrics_file, "r") as f:
-        for line in f:
+        lines = f.readlines()
+
+        for i in range(len(lines)):
+            line = lines[i].strip()
+
             # Skip empty lines
-            if not line.strip():
+            if not line:
                 continue
 
-            # Find all timestamp-text pairs in the line
-            matches = re.findall(r"\[(\d{2}:\d{2}:\d{2})\](.*?)(?=\[|$)", line)
+            # Find the timestamp and text in the line
+            match = re.match(r"\[(\d{2}:\d{2})\](.*)", line)
+            if not match:
+                continue  # Skip lines that don't match the expected format
 
-            for i in range(len(matches)):
-                time_str, text = matches[i]
+            time_str, text = match.groups()
 
-                # Convert timestamp to seconds
-                h, m, s = map(int, time_str.split(":"))
-                start_time = h * 3600 + m * 60 + s
+            # Convert timestamp (MM:SS) to seconds
+            m, s = map(int, time_str.split(":"))
+            start_time = m * 60 + s
 
-                # If there's a next subtitle, use its timestamp as end time
-                if i + 1 < len(matches):
-                    next_time_str = matches[i + 1][0]
-                    h, m, s = map(int, next_time_str.split(":"))
-                    end_time = h * 3600 + m * 60 + s
+            # If there's a next line, use its timestamp as end time
+            if i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+                next_match = re.match(r"\[(\d{2}:\d{2})\]", next_line)
+                if next_match:
+                    next_time_str = next_match.group(1)
+                    m, s = map(int, next_time_str.split(":"))
+                    end_time = m * 60 + s
                 else:
-                    # For the last subtitle in a line, show it for 4 seconds
+                    # If the next line doesn't have a timestamp, show the current subtitle for 4 seconds
                     end_time = start_time + 4
+            else:
+                # For the last subtitle, show it for 4 seconds
+                end_time = start_time + 4
 
-                subtitles.append((start_time, end_time, text.strip()))
+            subtitles.append((start_time, end_time, text.strip()))
 
     return subtitles
 
