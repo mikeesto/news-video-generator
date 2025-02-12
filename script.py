@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 import fal_client
-import base64
+import pathlib
 
 load_dotenv()
 
@@ -19,12 +19,13 @@ def delete_images():
             os.remove(os.path.join("images", file))
 
 
-# Fetch top 5 news headlines
 def fetch_news_headlines():
+    # Fetch top 5 news headlines
     NEWS_API_URL = f"https://newsapi.org/v2/top-headlines?sources=abc-news-au&apiKey={os.getenv('NEWS_API_KEY')}&pageSize=5"
 
     response = requests.get(NEWS_API_URL)
     news_headlines = [article["title"] for article in response.json()["articles"]]
+    print("Retrieved news headlines")
     return news_headlines
 
 
@@ -53,6 +54,7 @@ def generate_image_descriptions(news_headlines):
         result = response.json()
         descriptions.append(result["choices"][0]["message"]["content"])
 
+    print("Generated image descriptions")
     return descriptions
 
 
@@ -63,13 +65,12 @@ def generate_images(image_descriptions):
             arguments={"prompt": description, "image_size": "square_hd"},
         )
 
-        image_data = result["images"][0]["url"].split(",")[1]
-
-        image_binary = base64.b64decode(image_data)
+        image_url = result["images"][0]["url"]
+        image_response = requests.get(image_url)
 
         filename = f"image_{i}.jpg"
         with open(os.path.join("images", filename), "wb") as file:
-            file.write(image_binary)
+            file.write(image_response.content)
 
         print(f"Saved {filename}")
 
@@ -111,7 +112,9 @@ def generate_lyrics(news_headlines):
 
     result = response.json()
     lyrics = result["choices"][0]["message"]["content"]
-    print(lyrics)
+
+    print("Generated lyrics")
+    pathlib.Path("lyrics.txt").write_text(lyrics)
 
 
 # Workflow
