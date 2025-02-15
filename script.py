@@ -34,7 +34,7 @@ def generate_image_descriptions(news_headlines):
 
     for headline in news_headlines:
         data = {
-            "model": "meta-llama/llama-3.1-70b-instruct:free",
+            "model": "google/gemini-2.0-flash-exp:free",
             "messages": [
                 {
                     "role": "system",
@@ -77,26 +77,17 @@ def generate_images(image_descriptions):
 
 def generate_lyrics(news_headlines):
     data = {
-        "model": "meta-llama/llama-3-8b-instruct:free",
+        "model": "google/gemini-2.0-flash-exp:free",
         "messages": [
             {
                 "role": "system",
-                "content": """Generate lyrics for a pop song from the array of news headlines. There should be one verse, chorus and bridge only. Reply with the following structure only. Do not include anything else in reply.:
+                "content": """Generate lyrics for a pop song from the array of news headlines. There should be one verse, chorus and bridge only. Reply with the following structure only. Do not include anything else in reply.
                 [Verse]
-                Evan’s free, the swap is done
-                Headlines flash, a victory won
-                While on Wall Street fortunes fall
-                Tech giants stumble, hear the call
+                Verse lyrics here
                 [Chorus]
-                It’s a day of highs and lows
-                Freedom rings as markets slow
-                From Moscow to the trading floor
-                The world spins on forevermore
+                Chorus lyrics here
                 [Bridge]
-                Fed debates September’s fate
-                Harris’ past fuels the debate
-                Middle East in turmoil still
-                Leaders fall, but hope fulfills
+                Bridge lyrics here
                 """,
             },
             {"role": "user", "content": str(news_headlines)},
@@ -113,8 +104,11 @@ def generate_lyrics(news_headlines):
     result = response.json()
     lyrics = result["choices"][0]["message"]["content"]
 
+    # Remove leading whitespace from each line
+    lyrics_cleaned = "\n".join(line.lstrip() for line in lyrics.splitlines())
+
+    pathlib.Path("lyrics.txt").write_text(lyrics_cleaned)
     print("Generated lyrics")
-    pathlib.Path("lyrics.txt").write_text(lyrics)
 
 
 # Workflow
