@@ -4,11 +4,11 @@ import os
 import re
 
 
-def parse_lyrics_file(lyrics_file):
-    """Parse the lyrics file and return a list of subtitle tuples (start_time, end_time, text)"""
+def parse_timestamps_file(timestamps_file):
+    """Parse the timestamps file and return a list of subtitle tuples (start_time, end_time, text)"""
     subtitles = []
 
-    with open(lyrics_file, "r") as f:
+    with open(timestamps_file, "r") as f:
         lines = f.readlines()
 
         for i in range(len(lines)):
@@ -75,10 +75,7 @@ def create_subtitle_clips(subtitles, video_size):
 
 
 def create_video_with_images_and_audio(
-    image_folder="images",
-    audio_file="audio.mp3",
-    output_file="output.mp4",
-    lyrics_file="lyrics.txt",
+    image_folder, audio_file, output_file, timestamps_file
 ):
     # Get list of image files
     image_files = [
@@ -116,12 +113,11 @@ def create_video_with_images_and_audio(
         video_clip = video_clip.subclipped(0, audio_duration)
 
     # Parse and create subtitle clips
-    if lyrics_file and os.path.exists(lyrics_file):
-        subtitles = parse_lyrics_file(lyrics_file)
-        subtitle_clips = create_subtitle_clips(subtitles, video_clip.size)
+    subtitles = parse_timestamps_file(timestamps_file)
+    subtitle_clips = create_subtitle_clips(subtitles, video_clip.size)
 
-        # Combine video with subtitles
-        video_clip = CompositeVideoClip([video_clip, subtitle_clips])
+    # Combine video with subtitles
+    video_clip = CompositeVideoClip([video_clip, subtitle_clips])
 
     # Combine video with audio
     final_clip = video_clip.with_audio(audio_clip)
@@ -144,7 +140,7 @@ def create_video_with_images_and_audio(
 # Create the video with subtitles
 create_video_with_images_and_audio(
     image_folder="images",
-    audio_file="4December.mp3",
+    audio_file="15February.mp3",
     output_file="video.mp4",
-    lyrics_file="lyrics.txt",
+    timestamps_file="timestamps.txt",
 )
