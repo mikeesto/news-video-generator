@@ -20,8 +20,8 @@ def delete_images():
 
 
 def fetch_news_headlines():
-    # Fetch top 5 news headlines
-    NEWS_API_URL = f"https://newsapi.org/v2/top-headlines?sources=abc-news-au&apiKey={os.getenv('NEWS_API_KEY')}&pageSize=5"
+    # Fetch top 3 news headlines
+    NEWS_API_URL = f"https://newsapi.org/v2/top-headlines?sources=abc-news-au&apiKey={os.getenv('NEWS_API_KEY')}&pageSize=3"
 
     response = requests.get(NEWS_API_URL)
     news_headlines = [article["title"] for article in response.json()["articles"]]
@@ -81,7 +81,7 @@ def generate_lyrics(news_headlines):
         "messages": [
             {
                 "role": "system",
-                "content": """Generate lyrics for a pop song from the array of news headlines. There should be one verse, chorus and bridge only. Reply with the following structure only. Do not include anything else in reply.
+                "content": """Generate lyrics for a pop song from the array of news headlines. The song should be informative, the listener should understand today's news headlines. There should be one verse, chorus and bridge only. Reply with the following structure only. Do not include anything else in reply.
                 [Verse]
                 Verse lyrics here
                 [Chorus]
@@ -112,7 +112,7 @@ def generate_lyrics(news_headlines):
 
 
 # Workflow
-# delete_images()
+delete_images()
 news_headlines = fetch_news_headlines()
 image_descriptions = generate_image_descriptions(news_headlines)
 generate_images(image_descriptions)
