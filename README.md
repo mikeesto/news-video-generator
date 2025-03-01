@@ -2,9 +2,9 @@
 
 This is an experiment in creating a music video for daily news headlines. The idea is to generate images and lyrics for today's top three news headlines, and then use a song generation model to create a song. The song is used as the background music for the video, and the images are used as the visuals.
 
-## Example video
+## Example
 
-TODO:
+<video controls src="https://github.com/mikeesto/ai-news/raw/main/example/example.mp4" title="Example video"></video>
 
 ## How to use
 
