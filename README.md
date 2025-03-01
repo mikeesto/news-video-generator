@@ -4,7 +4,7 @@ This is an experiment in creating a music video for daily news headlines. The id
 
 ## Example
 
-<video controls src="https://github.com/mikeesto/news-video-generator/raw/refs/heads/master/example/example.mp4" title="Example video"></video>
+[An example of a generated video for 1st March](https://github.com/mikeesto/news-video-generator/raw/refs/heads/master/example/example.mp4)
 
 ## How to use
 
